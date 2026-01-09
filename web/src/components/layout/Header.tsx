@@ -1,9 +1,12 @@
 "use client";
 
+import Link from "next/link";
 import { Bell, Search } from "lucide-react";
-import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/store/auth";
 
 export function Header() {
+  const { user, logout } = useAuthStore();
+  const initials = user?.name ? user.name.split(" ").map((s) => s[0]).join("").slice(0, 2).toUpperCase() : "LG";
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center gap-4 border-b bg-background px-6">
       <div className="flex flex-1 items-center gap-4">
@@ -22,6 +25,14 @@ export function Header() {
           <span className="absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-destructive" />
           <span className="sr-only">Notifications</span>
         </button>
+        {user ? (
+          <div className="flex items-center gap-3">
+            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-primary text-xs font-bold">{initials}</div>
+            <button onClick={logout} className="text-sm text-muted-foreground hover:text-foreground">Logout</button>
+          </div>
+        ) : (
+          <Link href="/login" className="text-sm text-muted-foreground hover:text-foreground">Login</Link>
+        )}
       </div>
     </header>
   );

@@ -1,0 +1,15 @@
+vector_store:
+  type: "milvus"
+  milvus:
+    host: "localhost"
+    port: 19530
+    collection_name: "contract_clauses"
+  faiss:
+    index_path: "data/faiss_index"
+
+graph_store:
+  type: "neo4j"
+  neo4j:
+    uri: "bolt://localhost:7687"
+    username: "neo4j"
+    password: "${NEO4J_PASSWORD}"

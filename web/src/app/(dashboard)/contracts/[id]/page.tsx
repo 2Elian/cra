@@ -1,32 +1,79 @@
+"use client";
+
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import {
   ArrowLeft,
-  Download,
-  Share2,
-  AlertTriangle,
-  CheckCircle,
-  MessageSquare,
   FileText,
+  Search,
+  Share2,
+  Download,
+  AlertTriangle,
   Send,
   Sparkles,
-  Search,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import { contractService } from "@/services/contract";
+import { ContractMain, CONTRACT_STATUS_MAP } from "@/types/contract";
 
 export default function ContractDetailPage({ params }: { params: { id: string } }) {
-  // Mock data based on ID (in a real app, fetch data here)
-  const contractId = params.id;
+  const [contract, setContract] = useState<ContractMain | null>(null);
+  const [content, setContent] = useState<string>("");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        const id = parseInt(params.id);
+        const [contractData, contentData] = await Promise.all([
+          contractService.getContractById(id),
+          contractService.getContractContent(id)
+        ]);
+        setContract(contractData);
+        setContent(contentData);
+      } catch (err: any) {
+        console.error(err);
+        setError(err.message || "Failed to load contract details");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (params.id) {
+      fetchData();
+    }
+  }, [params.id]);
+
+  if (loading) {
+    return (
+      <div className="flex h-full items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  if (error || !contract) {
+    return (
+      <div className="flex h-full flex-col items-center justify-center gap-4">
+        <p className="text-destructive">{error || "Contract not found"}</p>
+        <Link href="/contracts">
+          <Button variant="outline">Back to Contracts</Button>
+        </Link>
+      </div>
+    );
+  }
+
+  const statusConfig = CONTRACT_STATUS_MAP[contract.status] || { label: "Unknown", variant: "default" };
+  const formattedDate = contract.updateTime 
+    ? new Date(contract.updateTime).toLocaleString() 
+    : (contract.createTime ? new Date(contract.createTime).toLocaleString() : "N/A");
 
   return (
     <div className="flex flex-col h-[calc(100vh-theme(spacing.20))] gap-4">
@@ -40,10 +87,10 @@ export default function ContractDetailPage({ params }: { params: { id: string } 
           </Link>
           <div>
             <h1 className="text-xl font-bold tracking-tight flex items-center gap-2">
-              Service Agreement - TechCorp <Badge variant="secondary">Draft</Badge>
+              {contract.contractName} <Badge variant={statusConfig.variant}>{statusConfig.label}</Badge>
             </h1>
             <p className="text-sm text-muted-foreground">
-              ID: {contractId} • Last updated 2 hours ago
+              ID: {contract.id} • Type: {contract.category || "General"} • Last updated: {formattedDate}
             </p>
           </div>
         </div>
@@ -67,7 +114,7 @@ export default function ContractDetailPage({ params }: { params: { id: string } 
           <CardHeader className="py-3 border-b flex flex-row items-center justify-between">
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <FileText className="h-4 w-4" />
-                <span>Page 1 of 5</span>
+                <span>Document View</span>
             </div>
              <div className="flex items-center gap-2">
                 <Button variant="ghost" size="icon" className="h-8 w-8">
@@ -78,36 +125,7 @@ export default function ContractDetailPage({ params }: { params: { id: string } 
           <div className="flex-1 overflow-auto p-8 bg-muted/20">
             <div className="mx-auto max-w-3xl bg-background shadow-sm p-12 min-h-full">
                 <p className="text-sm font-serif leading-loose whitespace-pre-wrap">
-{`SERVICE AGREEMENT
-
-This Service Agreement ("Agreement") is made and entered into as of [Date], by and between TechCorp Inc. ("Client") and ServiceProvider Ltd. ("Provider").
-
-1. SERVICES
-Provider agrees to perform the services described in Exhibit A attached hereto (the "Services").
-
-2. COMPENSATION
-Client shall pay Provider at the rate of $150 per hour for the Services. Invoices shall be submitted monthly and payable within 30 days.
-
-3. CONFIDENTIALITY
-Provider agrees to keep all Client information confidential. This obligation survives the termination of this Agreement for a period of 2 years. 
-[RISK DETECTED: Standard duration is usually 5 years or indefinite for trade secrets.]
-
-4. INDEMNIFICATION
-Provider shall indemnify Client against all claims arising out of Provider's negligence.
-[RISK DETECTED: Missing mutual indemnification.]
-
-5. TERMINATION
-Client may terminate this Agreement at any time with 30 days' written notice. Provider may not terminate this Agreement without cause.
-[RISK DETECTED: Unbalanced termination rights.]
-
-6. GOVERNING LAW
-This Agreement shall be governed by the laws of the State of California.
-
-IN WITNESS WHEREOF, the parties have executed this Agreement as of the date first above written.
-
-______________________                  ______________________
-Client Signature                        Provider Signature
-`}
+                  {content || "No content available for this contract."}
                 </p>
             </div>
           </div>

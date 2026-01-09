@@ -1,68 +1,70 @@
-# 合同合规审查 Agent 系统
+<div align="center"> 
 
-## 1. 项目概述
+# CRA: Contract compliance review backend service
 
-合同合规审查 Agent 系统是一套基于 Spring Cloud 的分布式微服务架构，专为企业合同全生命周期管理与合规审查设计。该系统能够实现合同上传、内容提取、合规性检查、风险评估等功能，帮助企业提高合同管理效率，降低合规风险。
+</div>
 
-## 2. 技术栈
+---
 
-### 核心框架
-- Spring Boot 3.1.5
-- Spring Cloud 2022.0.4
-- Spring Cloud Alibaba 2022.0.0.0-RC2
+The backend service of the Contract Compliance Review Agent is a distributed microservice architecture based on Spring Cloud, designed specifically for enterprise contract lifecycle management and compliance review. This system enables functions such as contract uploading, content extraction, compliance checking, and risk assessment, helping enterprises improve contract management efficiency and reduce compliance risks.
 
-### 数据存储
-- PostgreSQL 15：结构化数据存储（合同元数据、版本信息等）
-- MongoDB 6.0：非结构化合同内容存储
-- Elasticsearch 8.8：全文搜索与内容分析
-- Redis 7.0：缓存与会话管理
+---
 
-### 中间件
-- RabbitMQ 3.12：异步消息处理
-- Nacos 2.2.x：服务注册与配置中心
+### Core framework
+- Spring Boot 3.2.0
+- Spring Cloud 2023.0.0
+- Spring Cloud Alibaba 2023.0.1.0
 
-### 安全框架
-- Sa-Token 1.44.0：认证与授权
+### DataBase
+- PostgreSQL：Structured data storage (contract metadata, version information, etc.)
+- MongoDB：Storage of unstructured contract content
+- Elasticsearch：Full-text search and content analysis
+- Redis0：Caching and session management
 
-### 其他组件
-- Apache Tika 2.8.0：文档内容提取
-- Activiti 7.1.0.M6：工作流引擎
+### MiddleWare
+- RabbitMQ: Asynchronous message management
+- Nacos：Service Registration and Configuration Center
+- Sa-Token 1.39.0：Authentication and authorization
+- Apache Tika 2.8.0：Document content extraction
+- Activiti 7.1.0.M6：Workflow engine
 
-## 3. 微服务架构
+---
 
-系统采用微服务架构，当前已实现以下服务模块：
+## Microservice architecture
 
-### 3.1 用户服务 (user-service)
+### 1. user-service
 - 用户注册与登录
 - 角色与权限管理
 - 用户信息维护
 - 认证与授权服务（基于Sa-Token实现）
 
-### 3.2 合同服务 (contract-service)
+### 2 contract-service
 - 合同基本信息管理
 - 合同版本控制
 - 合同内容存储与检索（支持MongoDB和Elasticsearch）
 - 合同状态管理
 - 合同内容搜索（支持关键词高亮）
 
-### 3.3 待实现服务
+### 3. Planing
 - 条款提取服务 (clause-extraction-service)
 - 合规审查服务 (compliance-review-service)
 - 报告生成服务 (report-generation-service)
 
-## 4. 快速开始
+---
 
-### 4.1 环境要求
+## Quick Start
+
+### 1. Environmental requirements
 - JDK 17+
 - Maven 3.9.0+
-- Docker 20.10.0+ (推荐，用于启动依赖服务)
+- Docker 20.10.0+
 
-### 4.2 配置说明
+### 2. Configuration Instructions
 
 1. **配置中心**
    - 启动 Nacos 服务（默认端口：8848）
    - 下载 Nacos: https://github.com/alibaba/nacos/releases/download/2.2.3/nacos-server-2.2.3.zip
-   - 解压并启动：`cd nacos/bin && startup.cmd -m standalone`
+   - 解压并启动：`cd nacos/bin && .\startup.cmd -m standalone
 
 2. **数据库配置**
    - **PostgreSQL**: 会自动创建数据库 `contract_db` (根据配置)
@@ -73,7 +75,7 @@
 3. **消息队列**
    - RabbitMQ 服务默认端口：5672
 
-### 4.3 启动步骤
+### 3. Start Step
 
 1. **启动依赖服务**
    ```bash
@@ -102,27 +104,40 @@
    ```bash
    # 解压并启动 Nacos
    cd nacos/bin
-   startup.cmd -m standalone
+   .\startup.cmd -m standalone
+   sh startup.sh -m standalone
    ```
 
 3. **启动微服务**
    ```bash
+   $env:JAVA_HOME = "D:\java\jdk17"
+   $env:PATH = "$env:JAVA_HOME\bin;$env:PATH"
+   # 先安装 common 模块到本地仓库
+   cd cra-common
+   mvn clean install   
+   
+   # 再安装父工程依赖
+   cd ..
+   mvn clean install
+
    # 编译并启动用户服务 (端口: 8081)
-   cd user-service
+   cd cra-user-service
    mvn spring-boot:run
    
    # 编译并启动合同服务 (端口: 8082)
-   cd contract-service
+   cd cra-contract-service
    mvn spring-boot:run
    ```
 
-### 4.4 访问系统
+### 4. 访问系统
 - Nacos 控制台：http://localhost:8848/nacos (默认用户名/密码: nacos/nacos)
 - 用户服务 API：http://localhost:8081
 - 合同服务 API：http://localhost:8082
 - RabbitMQ 管理界面：http://localhost:15672 (默认用户名/密码: guest/guest)
 
-### 4.5 Docker Compose 配置示例
+---
+
+### Docker Compose 配置示例
 
 ```yaml
 version: '3.8'
@@ -178,7 +193,9 @@ volumes:
   rabbitmq_data:
 ```
 
-## 5. API 文档
+---
+
+## API Docs
 
 ### 5.1 合同服务 API
 

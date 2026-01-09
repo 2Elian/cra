@@ -1,3 +1,6 @@
+"use client";
+
+import { useState, useEffect, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -20,10 +23,59 @@ import {
   Filter,
   MoreHorizontal,
   Plus,
+  Eye,
+  Play,
+  Trash2,
+  Loader2,
 } from "lucide-react";
 import Link from "next/link";
+import { UploadContractDialog } from "@/components/contracts/UploadContractDialog";
+import { ContractStatus, CONTRACT_STATUS_MAP, ContractMain } from "@/types/contract";
+import { contractService } from "@/services/contract";
+import { format } from "date-fns";
 
 export default function ContractsPage() {
+  const [contracts, setContracts] = useState<ContractMain[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  const loadContracts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const { list } = await contractService.fetchContracts();
+      setContracts(list);
+      setError(null);
+    } catch (err: any) {
+      console.error("Failed to fetch contracts:", err);
+      setError(err.message || "Failed to load contracts");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadContracts();
+  }, [loadContracts]);
+
+  const handleUploadSuccess = () => {
+    loadContracts();
+  };
+
+  const handleDelete = async (id: number) => {
+    if (!confirm("Are you sure you want to delete this contract?")) return;
+    try {
+      await contractService.deleteContract(id);
+      loadContracts();
+    } catch (err: any) {
+      alert(err.message || "Delete failed");
+    }
+  };
+
+  const getStatusBadge = (status: number) => {
+    const config = CONTRACT_STATUS_MAP[status] || { label: "Unknown", variant: "default" };
+    return <Badge variant={config.variant}>{config.label}</Badge>;
+  };
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center justify-between">
@@ -33,9 +85,7 @@ export default function ContractsPage() {
             Manage and review your contracts.
           </p>
         </div>
-        <Button>
-          <Plus className="mr-2 h-4 w-4" /> Upload Contract
-        </Button>
+        <UploadContractDialog onUploadSuccess={handleUploadSuccess} />
       </div>
 
       <Card>
@@ -69,58 +119,69 @@ export default function ContractsPage() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {[
-                  {
-                    id: "1",
-                    name: "Service Agreement - TechCorp",
-                    type: "Service",
-                    status: "In Progress",
-                    risk: "Medium",
-                    date: "2024-01-05",
-                  },
-                  {
-                    id: "2",
-                    name: "NDA - Innovation Labs",
-                    type: "NDA",
-                    status: "Completed",
-                    risk: "Low",
-                    date: "2024-01-04",
-                  },
-                  {
-                    id: "3",
-                    name: "License Agreement - SoftSys",
-                    type: "License",
-                    status: "Pending Review",
-                    risk: "High",
-                    date: "2024-01-04",
-                  },
-                ].map((contract) => (
-                  <TableRow key={contract.id}>
-                    <TableCell className="font-medium">
-                        <Link href={`/contracts/${contract.id}`} className="hover:underline flex items-center gap-2">
-                             <FileText className="h-4 w-4 text-muted-foreground" />
-                             {contract.name}
-                        </Link>
-                    </TableCell>
-                    <TableCell>{contract.type}</TableCell>
-                    <TableCell>
-                      <Badge variant={contract.status === "Completed" ? "success" : "secondary"}>
-                        {contract.status}
-                      </Badge>
-                    </TableCell>
-                    <TableCell>
-                        <Badge variant={contract.risk === "High" ? "destructive" : contract.risk === "Medium" ? "secondary" : "outline"}>
-                            {contract.risk}
-                        </Badge>
-                    </TableCell>
-                    <TableCell>{contract.date}</TableCell>
-                    <TableCell className="text-right">
-                      <Button variant="ghost" size="icon">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </Button>
+                {loading ? (
+                   <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                      <div className="flex justify-center items-center">
+                        <Loader2 className="h-6 w-6 animate-spin text-primary" />
+                        <span className="ml-2">Loading contracts...</span>
+                      </div>
                     </TableCell>
                   </TableRow>
-                ))}
+                ) : error ? (
+                   <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center text-red-500">
+                      {error}
+                    </TableCell>
+                  </TableRow>
+                ) : contracts.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="h-24 text-center">
+                      No contracts found.
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  contracts.map((contract) => (
+                    <TableRow key={contract.id}>
+                      <TableCell className="font-medium">
+                        <Link href={`/contracts/${contract.id}`} className="hover:underline flex items-center gap-2">
+                          <FileText className="h-4 w-4 text-muted-foreground" />
+                          {contract.contractName}
+                        </Link>
+                      </TableCell>
+                      <TableCell>{contract.category || "General"}</TableCell>
+                      <TableCell>
+                        {getStatusBadge(contract.status)}
+                      </TableCell>
+                      <TableCell>
+                         {/* Risk is not yet in ContractMain, so mocking logic or check if backend adds it */}
+                         <Badge variant="outline">Pending</Badge>
+                      </TableCell>
+                      <TableCell>{contract.updateTime ? format(new Date(contract.updateTime), 'yyyy-MM-dd') : "-"}</TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                           <Button variant="ghost" size="icon" title="Start Review">
+                            <Play className="h-4 w-4" />
+                          </Button>
+                          <Link href={`/contracts/${contract.id}`}>
+                            <Button variant="ghost" size="icon" title="View Details">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </Link>
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-destructive hover:text-destructive" 
+                            title="Delete"
+                            onClick={() => handleDelete(contract.id)}
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
           </div>

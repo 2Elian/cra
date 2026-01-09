@@ -1,0 +1,89 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/28.2.5 Chrome/138.0.7204.251 Electron/37.6.1 Safari/537.36" version="28.2.5">
+  <diagram id="advanced-contract-workflow" name="Advanced AI Contract Analysis Pipeline">
+    <mxGraphModel dx="1584" dy="943" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1654" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="zone1" value="DATA EXTRACTION &amp; GRAPH RECONSTRUCTION (解决语义断裂/上下文爆炸)" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fillColor=#f8f9fa;strokeColor=#444444;dashed=1;fontStyle=1;fontColor=#333333" parent="1" vertex="1">
+          <mxGeometry x="40" y="40" width="680" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="zone2" value="MULTI-AGENT COGNITIVE ENGINE (RAG + MCP 协同审阅)" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fillColor=#f1f3f5;strokeColor=#444444;dashed=1;fontStyle=1;fontColor=#333333" parent="1" vertex="1">
+          <mxGeometry x="760" y="40" width="420" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="zone3" value="REAL-TIME FEEDBACK BUS (实时状态流)" style="swimlane;whiteSpace=wrap;html=1;startSize=30;fillColor=#ffffff;strokeColor=#444444;dashed=1;fontStyle=1;fontColor=#333333" parent="1" vertex="1">
+          <mxGeometry x="1220" y="40" width="340" height="360" as="geometry" />
+        </mxCell>
+        <mxCell id="n8" value="&lt;b&gt;实时状态流推送&lt;/b&gt;&#xa;摘要 | 风险等级 | 原因&#xa;建议 | 召回路径 | 思考" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;darkOpacity=0.05;fillColor=#ecfdf5;strokeColor=#10b981;fontColor=#064e3b;spacingLeft=10" parent="zone3" vertex="1">
+          <mxGeometry x="50" y="40" width="240" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="n9" value="&lt;b&gt;前端坐标渲染&lt;/b&gt;&#xa;风险点精准框选回显" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#10b981;fontColor=#ffffff;arcSize=10" parent="zone3" vertex="1">
+          <mxGeometry x="80" y="250" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="e8" parent="zone3" source="n8" target="n9" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="n1" value="&lt;b&gt;文档解析接口&lt;/b&gt;&#xa;PDF / Word / MinerU" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;arcSize=10;strokeColor=default;" parent="1" vertex="1">
+          <mxGeometry x="80" y="100" width="160" height="50" as="geometry" />
+        </mxCell>
+        <mxCell id="n2" value="&lt;b&gt;自研 Graph 解析器&lt;/b&gt;&#xa;解决跨上下文语义不通" style="rhombus;whiteSpace=wrap;html=1;fillColor=#4f46e5;fontColor=#ffffff;strokeColor=none" parent="1" vertex="1">
+          <mxGeometry x="280" y="80" width="200" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="n3" value="&lt;b&gt;语义子图划分 (Sub-Graphs)&lt;/b&gt;&#xa;保持连续段落语义连贯" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#818cf8;fontColor=#ffffff;arcSize=10" parent="1" vertex="1">
+          <mxGeometry x="500" y="200" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n4" value="&lt;b&gt;全局拓扑对齐&lt;/b&gt;&#xa;防止长文档上下文爆炸" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#818cf8;fontColor=#ffffff;arcSize=10" parent="1" vertex="1">
+          <mxGeometry x="500" y="300" width="180" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="n5" value="&lt;b&gt;RAG 本地知识引擎&lt;/b&gt;&#xa;召回历史案例 / 企业规范" style="shape=module;whiteSpace=wrap;html=1;fillColor=#f59e0b;fontColor=#ffffff;strokeColor=none" parent="1" vertex="1">
+          <mxGeometry x="790" y="100" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n6" value="&lt;b&gt;MCP 搜索规范库&lt;/b&gt;&#xa;动态检索外部法律标准" style="shape=module;whiteSpace=wrap;html=1;fillColor=#f59e0b;fontColor=#ffffff;strokeColor=none" parent="1" vertex="1">
+          <mxGeometry x="980" y="100" width="160" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="n7" value="&lt;b&gt;多 Agent 协同池&lt;/b&gt;&#xa;审阅 / 风险评估 / 合规校验" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ea580c;fontColor=#ffffff;arcSize=10;fontStyle=1" parent="1" vertex="1">
+          <mxGeometry x="840" y="240" width="250" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" parent="1" source="n1" target="n2" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" parent="1" source="n2" target="n3" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="380" y="230" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e3" parent="1" source="n3" target="n4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" parent="1" source="n4" target="n7" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="730" y="330" />
+              <mxPoint x="730" y="280" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e5" parent="1" source="n5" target="n7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" parent="1" source="n6" target="n7" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" parent="1" source="n7" target="n8" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" value="坐标元数据回传" parent="1" source="n1" target="n9" edge="1">
+          <mxGeometry x="-0.88" y="10" relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="160" y="370" />
+              <mxPoint x="790" y="370" />
+              <mxPoint x="1390" y="370" />
+            </Array>
+            <mxPoint as="offset" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,10 @@
+com\cra\contract\entity\ContractMain.class
+com\cra\contract\repository\ContractVersionRepository.class
+com\cra\contract\service\impl\ContractServiceImpl.class
+com\cra\contract\service\ContractService.class
+com\cra\contract\ContractServiceApplication.class
+com\cra\contract\controller\ContractController.class
+com\cra\contract\entity\ContractVersion.class
+com\cra\contract\entity\ContractContent.class
+com\cra\contract\repository\ContractMainRepository.class
+com\cra\contract\repository\ContractContentRepository.class

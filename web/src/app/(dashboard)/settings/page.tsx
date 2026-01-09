@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -8,9 +10,64 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { User, Bell, Lock, Globe } from "lucide-react";
+import { useThemeStore } from "@/store/theme";
+import { useAuthStore } from "@/store/auth";
 
 export default function SettingsPage() {
+  const { theme, setTheme } = useThemeStore();
+  const { user, updateProfile, updatePassword, loading } = useAuthStore();
+  
+  const [profileData, setProfileData] = useState({
+    realName: user?.realName || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    role: user?.role || "",
+  });
+
+  const [passwordData, setPasswordData] = useState({
+    oldPassword: "",
+    newPassword: "",
+    confirmPassword: "",
+  });
+
+  const userInitials = user?.name 
+    ? user.name.split(' ').map((n: string) => n[0]).join('').toUpperCase().slice(0, 2)
+    : user?.username?.slice(0, 2).toUpperCase() || "JD";
+
+  const handleProfileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setProfileData({ ...profileData, [e.target.name]: e.target.value });
+  };
+
+  const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPasswordData({ ...passwordData, [e.target.name]: e.target.value });
+  };
+
+  const onSaveProfile = async () => {
+    try {
+      await updateProfile(profileData);
+      alert("Profile updated successfully");
+    } catch (e: any) {
+      alert("Failed to update profile: " + e.message);
+    }
+  };
+
+  const onUpdatePassword = async () => {
+    if (passwordData.newPassword !== passwordData.confirmPassword) {
+      alert("New passwords do not match");
+      return;
+    }
+    try {
+      await updatePassword({ 
+        oldPassword: passwordData.oldPassword, 
+        newPassword: passwordData.newPassword 
+      });
+      alert("Password updated successfully");
+      setPasswordData({ oldPassword: "", newPassword: "", confirmPassword: "" });
+    } catch (e: any) {
+      alert("Failed to update password: " + e.message);
+    }
+  };
+    
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -38,30 +95,30 @@ export default function SettingsPage() {
             <CardContent className="space-y-4">
               <div className="flex items-center gap-4">
                 <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center text-primary text-2xl font-bold">
-                  JD
+                  {userInitials}
                 </div>
                 <Button variant="outline" size="sm">Change Avatar</Button>
               </div>
               <div className="grid gap-4 md:grid-cols-2">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Full Name</label>
-                  <Input defaultValue="John Doe" />
+                  <Input name="realName" value={profileData.realName} onChange={handleProfileChange} placeholder={user?.realName || user?.name || user?.username || ""} />
                 </div>
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Email</label>
-                  <Input defaultValue="john.doe@example.com" />
+                  <Input name="email" value={profileData.email} onChange={handleProfileChange} />
                 </div>
                  <div className="space-y-2">
                   <label className="text-sm font-medium">Job Title</label>
-                  <Input defaultValue="Legal Counsel" />
+                  <Input name="role" value={profileData.role} onChange={handleProfileChange} disabled />
                 </div>
                  <div className="space-y-2">
-                  <label className="text-sm font-medium">Department</label>
-                  <Input defaultValue="Legal Department" />
+                  <label className="text-sm font-medium">Phone</label>
+                  <Input name="phone" value={profileData.phone} onChange={handleProfileChange} />
                 </div>
               </div>
               <div className="flex justify-end">
-                  <Button>Save Changes</Button>
+                  <Button onClick={onSaveProfile} disabled={loading}>Save Changes</Button>
               </div>
             </CardContent>
           </Card>
@@ -79,9 +136,8 @@ export default function SettingsPage() {
                        <p className="text-xs text-muted-foreground">Select your preferred theme.</p>
                    </div>
                    <div className="flex gap-2">
-                       <div className="h-8 w-8 rounded-full bg-white border border-gray-200 cursor-pointer ring-2 ring-primary"></div>
-                       <div className="h-8 w-8 rounded-full bg-slate-950 border border-slate-800 cursor-pointer"></div>
-                       <div className="h-8 w-8 rounded-full bg-slate-900 border border-slate-800 cursor-pointer"></div>
+                       <button aria-label="Light" onClick={() => setTheme("light")} className={`h-8 w-8 rounded-full bg-white border border-gray-200 ${theme === "light" ? "ring-2 ring-primary" : ""}`}></button>
+                       <button aria-label="Dark" onClick={() => setTheme("dark")} className={`h-8 w-8 rounded-full bg-slate-950 border border-slate-800 ${theme === "dark" ? "ring-2 ring-primary" : ""}`}></button>
                    </div>
                </div>
             </CardContent>
@@ -128,20 +184,20 @@ export default function SettingsPage() {
              <CardContent className="space-y-4">
                 <div className="space-y-2">
                   <label className="text-sm font-medium">Current Password</label>
-                  <Input type="password" />
+                  <Input type="password" name="oldPassword" value={passwordData.oldPassword} onChange={handlePasswordChange} />
                 </div>
                 <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
                     <label className="text-sm font-medium">New Password</label>
-                    <Input type="password" />
+                    <Input type="password" name="newPassword" value={passwordData.newPassword} onChange={handlePasswordChange} />
                     </div>
                     <div className="space-y-2">
                     <label className="text-sm font-medium">Confirm New Password</label>
-                    <Input type="password" />
+                    <Input type="password" name="confirmPassword" value={passwordData.confirmPassword} onChange={handlePasswordChange} />
                     </div>
                 </div>
                  <div className="flex justify-end">
-                    <Button>Update Password</Button>
+                    <Button onClick={onUpdatePassword} disabled={loading}>Update Password</Button>
                 </div>
              </CardContent>
           </Card>

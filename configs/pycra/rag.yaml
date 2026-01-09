@@ -1,0 +1,14 @@
+rag:
+  search_k: 5
+  score_threshold: 0.7
+  graphrag:
+    enabled: true
+    index_path: "./ragtest/output"  # Path to GraphRAG indexing output (parquet files)
+    community_level: 2
+    response_type: "multiple paragraphs"
+    search_type: "local"  # or "global"
+
+agents:
+  contract_review:
+    max_iterations: 10
+    timeout: 300

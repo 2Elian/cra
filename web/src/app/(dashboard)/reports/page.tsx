@@ -54,6 +54,59 @@ const typeData = [
   { name: "Other", count: 15 },
 ];
 
+const ComplianceTooltip = ({ active, payload, label }: any) => {
+  if (!active || !payload || payload.length === 0) return null;
+  return (
+    <div className="rounded-lg border bg-background/95 backdrop-blur-sm p-3 shadow-xl min-w-[150px]">
+      <div className="text-sm font-semibold mb-2">{label}</div>
+      <div className="space-y-1.5">
+        {payload.map((item: any, idx: number) => (
+          <div key={idx} className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-2">
+              <span
+                className="w-2 h-2 rounded-full"
+                style={{
+                  backgroundColor:
+                    item.name === "Passed"
+                      ? "hsl(var(--primary))"
+                      : "hsl(var(--destructive))",
+                }}
+              />
+              <span className="text-xs text-muted-foreground">{item.name}</span>
+            </div>
+            <span className="text-xs font-bold font-mono">
+              {item.value?.toLocaleString?.() ?? item.value}
+            </span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const PieTooltip = ({ active, payload }: any) => {
+  if (!active || !payload || payload.length === 0) return null;
+  const item = payload[0];
+  const color = item?.payload?.color || item?.fill;
+  return (
+    <div className="rounded-lg border bg-background/95 backdrop-blur-sm p-3 shadow-xl min-w-[150px]">
+      <div className="flex items-center gap-2 mb-2">
+        <span
+          className="w-2 h-2 rounded-full"
+          style={{ backgroundColor: color }}
+        />
+        <span className="text-sm font-semibold">{item.name}</span>
+      </div>
+      <div className="flex items-center justify-between gap-4">
+        <span className="text-xs text-muted-foreground">Share</span>
+        <span className="text-xs font-bold font-mono">
+          {item.value?.toLocaleString?.() ?? item.value}%
+        </span>
+      </div>
+    </div>
+  );
+};
+
 export default function ReportsPage() {
   return (
     <div className="flex flex-col gap-6">
@@ -99,10 +152,7 @@ export default function ReportsPage() {
                     <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                     <XAxis dataKey="name" className="text-xs" />
                     <YAxis className="text-xs" />
-                    <Tooltip
-                        contentStyle={{ backgroundColor: "var(--background)", borderColor: "var(--border)" }}
-                        labelStyle={{ color: "var(--foreground)" }}
-                    />
+                    <Tooltip content={<ComplianceTooltip />} />
                     <Bar dataKey="passed" name="Passed" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
                     <Bar dataKey="rejected" name="Rejected" fill="hsl(var(--destructive))" radius={[4, 4, 0, 0]} />
                 </BarChart>
@@ -136,10 +186,7 @@ export default function ReportsPage() {
                                 <Cell key={`cell-${index}`} fill={entry.color} />
                             ))}
                         </Pie>
-                         <Tooltip
-                             contentStyle={{ backgroundColor: "var(--background)", borderColor: "var(--border)" }}
-                             itemStyle={{ color: "var(--foreground)" }}
-                         />
+                         <Tooltip content={<PieTooltip />} />
                     </PieChart>
                 </ResponsiveContainer>
             </div>

@@ -1,0 +1,9 @@
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  file_path: "logs"
+  save_days: 7
+  when: "midnight" # "S/M/H" --> "midnight"每天00:00切分 --> "W0" ~ "W6"每周几切分
+  interval: 1 #当 when="M" interval=15 每 15 分钟切一次
+  file_handler_maxBytes: 50 # 50M
+  file_handler_backupCount: 100 # 最多保留多少个文件

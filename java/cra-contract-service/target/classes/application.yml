@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: cra-contract-service
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848
+        namespace: contract-compliance-agent
+      config:
+        server-addr: localhost:8848
+        namespace: contract-compliance-agent
+        group: DEFAULT_GROUP
+        file-extension: yml
+        import-check:
+          enabled: false   # 关闭 spring.config.import 检查
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://172.16.107.15:5432/contract_db
+    username: postgres
+    password: 123456
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  data:
+    mongodb:
+      host: 172.16.107.15
+      port: 27017
+      database: contract_content
+  rabbitmq:
+    host: 172.16.107.15
+    port: 5672
+    username: admin
+    password: 123456
+    virtual-host: /
+  elasticsearch:
+    uris: http://172.16.107.15:9200
+
+ftp:
+  host: 172.27.192.1
+  port: 1007
+  username: anonymous
+  password: 
+  base-path: /contracts
+
+# 忽略的日志
+logging:
+  level:
+    org.apache.pdfbox: ERROR
+    org.apache.fontbox: ERROR
+
+server:
+  port: 8082 # 合同服务端口

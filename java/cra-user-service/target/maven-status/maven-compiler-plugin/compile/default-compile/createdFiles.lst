@@ -1,0 +1,17 @@
+com\cra\user\repository\PermissionRepository.class
+com\cra\user\controller\UserController.class
+com\cra\user\entity\Permission.class
+com\cra\user\repository\UserRepository.class
+com\cra\user\repository\RoleRepository.class
+com\cra\user\entity\Role.class
+com\cra\user\service\impl\RoleServiceImpl.class
+com\cra\user\service\PermissionService.class
+com\cra\user\controller\PermissionController.class
+com\cra\user\service\UserService.class
+com\cra\user\service\impl\UserServiceImpl.class
+com\cra\user\service\RoleService.class
+com\cra\user\controller\RoleController.class
+com\cra\user\service\impl\PermissionServiceImpl.class
+com\cra\user\config\SecurityConfig.class
+com\cra\user\entity\User.class
+com\cra\user\UserServiceApplication.class

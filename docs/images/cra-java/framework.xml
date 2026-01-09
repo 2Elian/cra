@@ -1,0 +1,106 @@
+<mxfile host="65bd71144e">
+  <diagram id="java-backend-logic" name="Java Backend Architecture">
+    <mxGraphModel dx="1422" dy="798" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        
+        <mxCell id="gw_group" value="API Gateway (Spring Cloud Gateway)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="80" y="40" width="1000" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_1" value="认证授权 (Spring Security/JWT)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="gw_group">
+          <mxGeometry x="40" y="40" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_2" value="动态路由 &amp; 负载均衡 (LoadBalancer)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="gw_group">
+          <mxGeometry x="280" y="40" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_3" value="流量控制 (Sentinel/Resilience4j)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="gw_group">
+          <mxGeometry x="540" y="40" width="200" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="gw_4" value="全链路追踪 (SkyWalking)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="gw_group">
+          <mxGeometry x="780" y="40" width="180" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="svc_group" value="Business Microservices (Spring Boot Cluster)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="80" y="180" width="1000" height="160" as="geometry" />
+        </mxCell>
+        <mxCell id="svc_1" value="合同管理微服务&#10;(Contract Service)&#10;--&#10;解析/版本/状态机" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;align=center;" vertex="1" parent="svc_group">
+          <mxGeometry x="40" y="40" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="svc_2" value="AI 任务调度网关&#10;(AI Gateway Service)&#10;--&#10;异步任务管理/回调" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;align=center;" vertex="1" parent="svc_group">
+          <mxGeometry x="280" y="40" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="svc_3" value="用户权限中心&#10;(Auth Service)&#10;--&#10;RBAC/SSO" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;align=center;" vertex="1" parent="svc_group">
+          <mxGeometry x="520" y="40" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="svc_4" value="知识/流程中心&#10;(Workflow Service)&#10;--&#10;审批流/知识库同步" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffffff;align=center;" vertex="1" parent="svc_group">
+          <mxGeometry x="780" y="40" width="180" height="90" as="geometry" />
+        </mxCell>
+
+        <mxCell id="ai_group" value="AI Service Layer (Python/FastAPI Engine)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="80" y="380" width="1000" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="ai_1" value="gRPC / HTTP 接口" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="ai_group">
+          <mxGeometry x="40" y="40" width="140" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ai_2" value="OCR 文字识别引擎" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="ai_group">
+          <mxGeometry x="220" y="40" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ai_3" value="LLM Agent (审查/起草)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="ai_group">
+          <mxGeometry x="440" y="40" width="220" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="ai_4" value="RAG 向量检索增强" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="ai_group">
+          <mxGeometry x="700" y="40" width="220" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="db_group" value="Data Persistence Layer" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="80" y="520" width="1000" height="110" as="geometry" />
+        </mxCell>
+        <mxCell id="db_1" value="PostgreSQL&#10;(事务数据)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="db_group">
+          <mxGeometry x="50" y="35" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="db_2" value="MongoDB&#10;(非结构化文档)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="db_group">
+          <mxGeometry x="230" y="35" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="db_3" value="Elasticsearch&#10;(全文搜索)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="db_group">
+          <mxGeometry x="410" y="35" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="db_4" value="Neo4j&#10;(合规知识图谱)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="db_group">
+          <mxGeometry x="590" y="35" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="db_5" value="Milvus&#10;(向量库)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="db_group">
+          <mxGeometry x="770" y="35" width="100" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="db_6" value="MinIO&#10;(文件存储)" style="shape=cylinder3;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="db_group">
+          <mxGeometry x="910" y="35" width="80" height="60" as="geometry" />
+        </mxCell>
+
+        <mxCell id="inf_group" value="Infrastructure (Service Governance)" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="80" y="660" width="1000" height="100" as="geometry" />
+        </mxCell>
+        <mxCell id="inf_1" value="Nacos (配置/发现)" style="shape=process;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="inf_group">
+          <mxGeometry x="40" y="40" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="inf_2" value="RabbitMQ (异步通知)" style="shape=process;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="inf_group">
+          <mxGeometry x="280" y="40" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="inf_3" value="Redis (分布式锁/缓存)" style="shape=process;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="inf_group">
+          <mxGeometry x="520" y="40" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="inf_4" value="K8s / Docker 容器编排" style="shape=process;whiteSpace=wrap;html=1;fillColor=#ffffff;" vertex="1" parent="inf_group">
+          <mxGeometry x="760" y="40" width="200" height="40" as="geometry" />
+        </mxCell>
+
+        <mxCell id="edge1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="gw_group" target="svc_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="svc_group" target="ai_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="ai_group" target="db_group">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

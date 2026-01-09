@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: cra-user-service
+
+  cloud:
+    nacos:
+      discovery:
+        server-addr: localhost:8848   # Nacos 服务地址
+        namespace: contract-compliance-agent
+      config:
+        server-addr: localhost:8848
+        namespace: contract-compliance-agent
+        group: DEFAULT_GROUP
+        file-extension: yml
+        import-check:
+          enabled: false   # 关闭 spring.config.import 检查
+
+  datasource:
+    url: jdbc:postgresql://172.16.107.15:5432/contract_db
+    username: postgres
+    password: 123456
+    driver-class-name: org.postgresql.Driver
+
+  data:
+    mongodb:
+      host: 172.16.107.15
+      port: 27017
+      database: contract_content
+
+  redis:
+    host: 172.16.107.15
+    port: 6379
+
+  rabbitmq:
+    host: 172.16.107.15
+    port: 5672
+    username: admin
+    password: 123456
+
+  jpa:
+    hibernate:
+      ddl-auto: update   # 自动创建表-dev mode
+    show-sql: false # 是否打印 SQL
+    properties:
+      hibernate:
+        format_sql: false # SQL 是否格式化输出
+
+server:
+  port: 8081   # 用户服务端口
+
+sa-token:
+  jwt-secret-key: contract-compliance-agent-jwt-secret-key-2024
+  token-name: Authorization
+  token-prefix: Bearer
+  timeout: 86400
+  active-timeout: -1
+  is-concurrent: true
+  is-share: false
+  token-style: uuid
+  is-log: true
